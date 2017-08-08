@@ -24,7 +24,7 @@ github_username:  integrityinspired
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-hydejack
+# theme: jekyll-theme-hydejack
 plugins:
   - jekyll-feed
 
