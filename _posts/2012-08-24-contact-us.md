@@ -19,5 +19,6 @@ author:
   first_name: Travis
   last_name: Dietz
 ---
-<p>email: info at integrityinspired dot com</p>
-<p>phone: (913) 375-0611</p>
+email: info at integrityinspired dot com
+
+phone: (913) 375-0611
