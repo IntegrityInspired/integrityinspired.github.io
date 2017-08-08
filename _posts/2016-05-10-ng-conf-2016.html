@@ -1,0 +1,62 @@
+---
+layout: post
+title: ng-conf 2016
+date: 2016-05-10 01:31:08.000000000 -05:00
+type: post
+published: true
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '6'
+  _thumbnail_id: '359'
+author:
+  login: ryan.langton
+  email: ryan@integrityinspired.com
+  display_name: Ryan Langton
+  first_name: Ryan
+  last_name: Langton
+---
+<p>ng-conf 2016 is a wrap and we've learned a lot, here's a few of the highlights:</p>
+<ul>
+<li>Angular 2 is ready.  <a href="https://github.com/angular/angular/blob/master/CHANGELOG.md#200-rc1-2016-05-03">RC1</a> came out the same week of ng-conf and the framework is ready for mass usage, with no anticipated breaking changes on the horizon.</li>
+<li><a href="https://goo.gl/photos/QBRNKwqikxMuS54R7">$scope is dead</a>, finally.</li>
+<li><a href="https://cdn-images-1.medium.com/max/800/1*j-SOtxql-Sqmvj0i0TWqMg.jpeg">Everything is a stream</a>.  No really, everything.  If you don't know Observables, you will.</li>
+<li><a href="https://www.youtube.com/watch?v=aSFfLVxT5vA">Shai Reznik is hilarious</a>.</li>
+<li><a href="https://twitter.com/John_Papa">John Papa</a> and <a href="https://twitter.com/karaforthewin">Kara Erickson</a> have serious live coding skills.</li>
+<li>Not only is the number 42 <a href="https://en.wikipedia.org/wiki/Phrases_from_The_Hitchhiker%27s_Guide_to_the_Galaxy#Answer_to_the_Ultimate_Question_of_Life.2C_the_Universe.2C_and_Everything_.2842.29">the answer to the ultimate question of life, the Universe, and everything</a>, it's also the number of Dave's that attended ng-conf.</li>
+</ul>
+<p>We heard a lot about many different features and tooling surrounding Angular 2, and it may seem like a lot to digest.  For those of you who were unable to attend ng-conf, this is a very high level overview of many of these things and I hope it can help you determine what pieces you can use, what you can ignore for now, and where you may want to dig in and learn more.</p>
+<p><strong>Angular 2</strong></p>
+<p>Angular 2 is ready.  Although there are more features in the pipeline to be added to the core (such as an offline compiler), most of these are just benefits that will make the experience better without forcing large changes to your code.  What strikes me most about Angular 2 core is it's clean approach and simplicity, all the while maintaining a huge amount of flexibility.  Angular 1 is hard.  Hard to learn, hard to code in, and hard to debug, due to disparate parts and the $digest cycle.  Yet we still did great things with it.  The more I learn about Angular 2 the more glaring the weaknesses in Angular 1.  Angular 2 is sleek, sexy, and clean, especially when used with <a href="https://www.typescriptlang.org/">TypeScript</a>.</p>
+<p><strong>Should I use it?</strong> Absolutely!</p>
+<p>The only thing lacking in Angular 2 is the huge ecosystem we've built out in Angular 1, with all kinds of useful directives, code libraries, and samples available.  It won't be long before Angular 2 has a greater ecosystem due to it's power and simplicity, there are already a lot of great libraries in the works so I wouldn't let this hold you back.</p>
+<p><strong>Angular 1.5</strong></p>
+<p>Angular 1.5 is a big improvement to Angular 1.x.  It brings several Angular 2 features into the Angular 1 framework (such as component style design), as well as improved performance which we've seen with every subsequent Angular 1.x release.</p>
+<p><strong>Should I use it?</strong>  Maybe.</p>
+<p>If you're using Angular 1 and not yet ready to make the jump to Angular 2, you should definitely start using version 1.5 so that you can take advantage of it's performance benefits, back ported Angular 2 features, and Component syntax.  That said, with all the effort put into making Angular 2 usable alongside Angular 1 using ngUpgrade, there's not any compelling reasons I can see to not be writing your new components in Angular 2.</p>
+<p><strong>ngUpgrade</strong></p>
+<p>ngUpgrade is an Angular module that allows you to run Angular 1 and Angular 2 side by side by upgrading or downgrading services and directives to the version of Angular that you're using for your primary module.  This is a very important and helpful feature for bringing an Angular 1 app up to Angular 2 gradually.  If you want to practice on something other than your work application or just see ngUpgrade in action, there is an <a href="https://github.com/thoughtram/angular-upgrade-app">excellent demo app</a> available, complete with exercises to teach you the concepts.</p>
+<p>For the most part all you need to do is bring in the ngUpgrade module, create a custom module for each component you want to convert, and use the upgradeAdapter to upgrade or downgrade components.  That's really only a line or two of code for each component, and something you can easily remove once your project is fully upgraded.</p>
+<p><strong>Should I use it?</strong>  Yes, for existing Angular 1 projects.</p>
+<p><strong>Angular Universal</strong></p>
+<p><a href="https://universal.angular.io/">Angular Universal</a> brings the angular compiler to the server.  This means that crawlers and previews of your page will not get incomplete data or curly braces {{ }}, they'll actually get a view of your page.  Server rendering increases performance, improves your SEO, and provides previews to your site for social media for example.  The only current downside to Angular Universal is that it will render twice, once on the server, and once on the client.  The client rendered view will replace the server rendered view once it is completed.  You can isolate areas of your site you don't care about server rendering so that they are only rendered on the client.</p>
+<p><strong>Should I use it?</strong>  Maybe.</p>
+<p>Server rendering has numerous benefits and seems likely it will become a best practice.  I believe this will eventually be default behavior for Angular applications, but it is quite a difference than what we're used to.  If you're not comfortable with adding yet another thing to bootstrapping your Angular applications, and don't necessarily care about the benefits, you may choose to wait on this one.</p>
+<p><strong>Angular CLI</strong></p>
+<p>The <a href="https://github.com/angular/angular-cli">Angular CLI</a> (Command Line Interface) is a command line tool that will help you do things like spin up new angular projects, create routes and components from a template, as well as run build and deployment tasks.  The team developing the CLI intends for it to eventually be able to replace the need for other build/deploy tools such as Gulp and Grunt.</p>
+<p><strong>Should I use it?</strong>  Maybe.</p>
+<p>I recommend trying out the Angular CLI as it has the potential to greatly simplify your workflow.  The CLI is in early Alpha stage however, so expect bugs and missing functionality.  Whether you use the CLI depends on your tolerance for those things, but this is definitely one to keep an eye on.</p>
+<p><strong>NativeScript, ReactNative and Progressive Web Apps</strong></p>
+<p>Native apps are better for capturing a user's attention for longer periods of time, while web apps tend to <a href="http://www.lukew.com/ff/entry.asp?1954">reach a greater audience</a>.  You now have some great options for creating your Angular 2 application as an installable Native application.  You can use <a href="https://www.nativescript.org/">NativeScript</a> or <a href="http://www.reactnative.com/">ReactNative</a> to create a true native UI.  I know what you're thinking, React?  Isn't this an Angular application?  Well, yes it is.  React is used for the rendering native components and Angular is used for everything else.  Who'd have thought Angular and React could live in harmony?  They can, and it's pretty cool.  <a href="https://github.com/angular/react-native-renderer">Here's a sample app</a> to get you started.</p>
+<p>Your other option for mobile is to make your application a <a href="https://developers.google.com/web/progressive-web-apps?hl=en">Progressive Web App</a> (PWA).  This just means you build the web app as you usually would, but with a little configuration you give it some characteristics of a mobile app.  It becomes installable, get's a mobile home screen icon, and some offline capabilities.  This is a small jump from a traditional web app and gives you a lot of added benefits.</p>
+<p><strong>Should I use it?</strong>  Maybe.</p>
+<p>If you're concerned about mobile at all, which most of us should be, you should at least consider these three options.  If you want a native mobile experience pick NativeScript or ReactNative.  If you want your web app to have many properties of a native app without having to worry about true native functionality, consider making your app a PWA.</p>
+<p><strong>Angular Material</strong></p>
+<p><a href="https://material.angularjs.org/latest/">Angular Material</a> is a library of components that meet Google's <a href="http://www.google.com/design/spec/material-design/introduction.html#">Material Design Specifications</a>.  These are Web UI elements (buttons, navigation menus, form controls, etc) that meet a high standard of quality and visual uniformity across all types of devices.</p>
+<p><strong>Should I use it?</strong>  Not yet.</p>
+<p>Unless you're still using Angular 1, you might want to wait a few months before incorporating Angular Material.  It's still very early in development for Angular 2.  However, the team is moving towards feature parity with Material 1 and hopefully we'll see it soon.  The <a href="https://github.com/angular/material2">project is open source</a> so if you're so inclined put in a pull request and help out with it's development.</p>
+<p><strong>Conclusion</strong></p>
+<p>ng-conf 2016 was a fantastic conference with a ton of good content, far too much for me to cover in a single blog.  I recommend checking out the <a href="https://www.youtube.com/watch?list=PLOETEcp3DkCq788xapkP_OU-78jhTf68j&amp;v=J5Bvy4KhIs0">ng-conf video</a> for topics you want to learn more about, follow the speakers, and get involved in open source projects built with Angular 2.  Please note that my views on topics are my opinion only and could differ greatly from others.</p>
+<p>Finally, if you're interested in working with Angular and live in the KC area, <a href="http://www.integrityinspired.com/were-hiring/">we're hiring</a>.</p>
+<p><a href="https://twitter.com/rlangton76" class="twitter-follow-button">Follow @rlangton76</a></p>

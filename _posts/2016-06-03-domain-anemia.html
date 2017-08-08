@@ -1,0 +1,69 @@
+---
+layout: post
+title: ''
+date: 2016-06-03 19:49:36.000000000 -05:00
+type: post
+published: true
+status: publish
+categories: []
+tags: []
+meta:
+  _edit_last: '1'
+  _thumbnail_id: '375'
+author:
+  login: phil.ledgerwood
+  email: phil@integrityinspired.com
+  display_name: Philip Ledgerwood
+  first_name: Philip
+  last_name: Ledgerwood
+---
+<p>I want you to think for a minute about your application's domain model - specifically, the domain objects.  I have a question for you:</p>
+<p>Are your domain objects almost entirely collections of public properties with getters and setters?</p>
+<p>If so, your domain may be suffering from Domain Anemia.  Let's look at a case study.</p>
+<h3>Patient #1 - The Customer Class</h3>
+<pre><span style="color: #0000ff;">public class</span> Customer
+{
+  <span style="color: #0000ff;">public int</span> CustomerId;
+  <span style="color: #0000ff;">public string</span> FirstName { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> LastName { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> Address1 { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> Address2 { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> City { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> State { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> Zip { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public virtual</span> ICollection&lt;Order&gt; Orders { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+}</pre>
+<p>Not terrible, right?  Some of the more foresighted among us might want to make a value object out of the Address, but you get the idea.  This is typical of what I see in many domains - objects that are almost exclusively collections of public getters and setters with maybe one or two object-specific methods to do calculations or validations.  This object can easily be serialized, bound to a UI, and given to an O/RM for database saving.</p>
+<p>And we are well on the way to a <a href="http://martinfowler.com/eaaCatalog/transactionScript.html">Transaction Script</a> or <a href="http://martinfowler.com/eaaCatalog/activeRecord.html">Active Record</a>, which are both great options for applications that do not need the complexity of a domain at the heart of the software.  My guess is, however, that your application can benefit from a model of the domain, and this is how you're trying to do it.  If all you're trying to do is create a nice UI to update a database, this'll work just fine.  Use the Transaction Script or Active Record patterns with abandon.</p>
+<p>But if you're trying to model a business domain, an object like this is not going to cut it.  Why?  Among other reasons, a class like our Customer class above captures absolutely no business intent or business value.</p>
+<p>Think about this - right now all those public setters allow any of those pieces of data to be changed.  Great, right?  Well, is it?</p>
+<p>What we're missing from this object is any kind of intent or reasoning about why its state could change.  Why, for instance, would we as a business ever change a Customer's city?</p>
+<p>Is it so that they'll get their marketing materials?  Invoices?  Products?  Do those need to be different addresses?</p>
+<p>What would happen to make us change that city?  Did the Customer move?  Other than just fat-fingering the wrong data, are there any other business reasons why that city would need to change?</p>
+<p>Right now, our domain object reflects none of that intent or knowledge.  Any of that data could be changed from anywhere for any reason.</p>
+<p>Ok, so let's say we took all the setters away from the address-related fields and created a ChangeAddress() method that took in new information and set those values internally.  Does that fix things?</p>
+<p>It's made them better, but once again, have we established any kind of business intent?  We've defined that addresses have no reason to change one bit at a time and must change as a unit.  That's a step forward and would probably push us toward a refactored class design where Address was a value type instead of five separate fields.  But we still have given the power to ChangeAddress() to any possible context.</p>
+<p>But what if we did this?</p>
+<pre><span style="color: #0000ff;">public class</span> Customer
+{
+  <span style="color: #0000ff;">public int</span> CustomerId { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> FirstName { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">public string</span> LastName { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+  <span style="color: #0000ff;">private</span> Address _mailingAddress;
+  <span style="color: #0000ff;">public</span> Address MailingAddress { <span style="color: #0000ff;">get</span> { <span style="color: #0000ff;">return</span> _mailingAddress; } }
+  <span style="color: #0000ff;">public virtual</span> ICollection&lt;Order&gt; Orders { <span style="color: #0000ff;">get</span>; <span style="color: #0000ff;">set</span>; }
+
+  <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> MoveTo(Address newAddress)
+  {
+    _mailingAddress = newAddress;
+    OnCustomerMoved(<span style="color: #0000ff;">new</span> CustomerMovedEventArgs(CustomerId, newAddress));
+  }
+}</pre>
+<p>Notice what we accomplished by this design:</p>
+<ol>
+<li>The bits of address data are not available to change by anyone for any reason.</li>
+<li>We have explicitly defined why, for our business model, an address should change.</li>
+<li>We have defined something that could happen to a Customer that has an impact on our system from a business perspective and can now handle that with any logic we choose.</li>
+<li>We can broadcast this event to the rest of the system allowing them to react to the fact that a Customer has moved however they need to.</li>
+</ol>
+<p>There are more things we could do with this code to improve it.  Why should a CustomerId change?  What about name stuff?  Is this a sufficient way to handle address changes?  But I just wanted to introduce the concept of an anemic domain model, why it weakens our applications, and how we can start down the road to recovery.</p>
