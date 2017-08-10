@@ -1,5 +1,6 @@
 ---
 layout: post
+comments: true
 title: The Dangers of Designing the Database First
 date: 2016-09-09 18:22:09.000000000 -05:00
 type: post
